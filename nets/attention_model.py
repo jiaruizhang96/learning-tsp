@@ -596,7 +596,9 @@ class AttentionModel(nn.Module):
         if self.tanh_clipping > 0:
             logits = torch.tanh(logits) * self.tanh_clipping
         if self.mask_logits:
-            logits[mask] = -1e10
+            #logits[mask] = -1e10
+            logits.masked_fill_(mask.bool(), -1e10)
+
 
         return logits, glimpse.squeeze(-2)
 
