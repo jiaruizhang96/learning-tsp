@@ -570,7 +570,9 @@ class AttentionModel(nn.Module):
         compatibility = torch.matmul(glimpse_Q, glimpse_K.transpose(-2, -1)) / math.sqrt(glimpse_Q.size(-1))
         if self.mask_inner:
             assert self.mask_logits, "Cannot mask inner without masking logits"
-            compatibility[mask[None, :, :, None, :].expand_as(compatibility)] = -1e10
+            #compatibility[mask[None, :, :, None, :].expand_as(compatibility)] = -1e10
+            compatibility[mask[None, :, :, None, :].expand_as(compatibility).bool()] = -1e10
+
             if self.mask_graph:
                 compatibility[graph_mask[None, :, :, None, :].expand_as(compatibility)] = -1e10
 
